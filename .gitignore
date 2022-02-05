@@ -2,12 +2,13 @@
 #
 # Get latest from https://github.com/github/gitignore/blob/master/Unity.gitignore
 #
-/[Ll]ibrary/
-/[Tt]emp/
+*/[Ll]ibrary/
+StardewValleyGiftsUnity/[Ll]ibrary/
+*/[Tt]emp/
 /[Oo]bj/
 /[Bb]uild/
 /[Bb]uilds/
-/[Ll]ogs/
+*/[Ll]ogs/
 /[Mm]emoryCaptures/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
@@ -58,3 +59,4 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+StardewValleyGiftsUnity/Library/Artifacts/02/02058338ab42fc8c78f9da3cdd23b58c
