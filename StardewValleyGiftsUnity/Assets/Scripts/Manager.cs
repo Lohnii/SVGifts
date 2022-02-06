@@ -10,48 +10,124 @@ public class Manager : MonoBehaviour
     public CharactersSO[] characters;
     public UniversalOpinionsSO[] universals;
 
-    public InputField tipoStr;
+    public InputField[] tipoStr;
+    InputField activeTipoStr {
+        get {
+            for (int i = 0; i < tipoStr.Length; i++)
+            {
+                if(tipoStr[i].IsActive()) return tipoStr[i];
+            }
+            return null;
+        }
+    }
+    public InputField characterStr;
 
     public SerializableList<string> failedStr;
 
     public bool addAllUniv;
 
+    private void Start() {
+        if(addAllUniv) AddAllUniversals();
+    }
+
+    #region Universal
     public void AddUniversal(string itemStr){
-        //pega o tipo
-        GiftType tipo = GiftType.None;
-        try {
-            //success
-            tipo = ParseGiftType(tipoStr.text);
-            AddUniversal(itemStr, tipo);
-        } catch {
-            print("Unable to parse " + tipoStr);
-        }
+        AddUniversal(itemStr, UpdateGiftType());
     }
 
     public void AddUniversal(string itemStr, GiftType tipo){
-        //pega o universalSO
-        int u = Array.FindIndex(universals,x => x.giftType == tipo);
+        if(tipo != GiftType.None){
+            //pega o universalSO
+            int u = Array.FindIndex(universals,x => x.giftType == tipo);
+
+            //verifica se o index eh valido
+            if(u < 0 || u > universals.Length){
+                print("Could not find universal type " + u + " " + tipo.ToString());
+            }
+
+            try {
+                //success
+                universals[u].items.Add(ParseItem(itemStr));
+                //print("added " + itemStr);
+
+            } catch {
+                print("Could not parse item " + itemStr);
+                failedStr.list.Add(itemStr);
+            }
+        }
+    }
+
+    public void AddSpecific(string todos, GiftType tipo){
+        //separa os itens
+        string[] it = todos.Split(',');
+
+        activeTipoStr.text = tipo.ToString();
+
+        for (int i = 0; i < it.Length; i++)
+        {
+            if(it[i] != "")
+                if(VerifyIfDifferent(it[i]))
+                    AddUniversal(it[i]);//todo fazer ele pegar o tipo certo
+        }
+    }
+
+    #endregion
+
+    #region Exceptions
+
+    //para o input field
+    public void AddException(string itemStr){
+        AddException(itemStr,UpdateGiftType(), UpdateCharacter());
+    }
+
+    public void AddException(string itemStr, GiftType tipo, string character){
+        //pega o characterSO
+        int c = Array.FindIndex(characters,x => x.charName == character);
+        //pega o index do tipo        
+        int g = Array.FindIndex(characters[c].gifts,x => x.giftType == tipo);
 
         //verifica se o index eh valido
-        if(u < 0 || u > universals.Length){
-            print("Could not find universal type " + u + " " + tipo.ToString());
+        if(c < 0 || c > characters.Length){
+            print("Could not find character " + c + " " + character.ToString());
         }
 
         try {
             //success
-            universals[u].items.Add(ParseItem(itemStr));
-            //print("added " + itemStr);
+            if(VerifyIfDifferent(itemStr, character, tipo)){
+                characters[c].gifts[g].exceptions.Add(ParseItem(itemStr));
+                //print("added " + itemStr);
+            }
 
         } catch {
             print("Could not parse item " + itemStr);
             failedStr.list.Add(itemStr);
         }
+    }   
+
+    #endregion
+
+    bool VerifyIfDifferent(string item){ //verifica se nao esta adicionando o mesmo item
+        for (int u = 0; u < universals.Length; u++)
+        {
+            for (int i = 0; i < universals[u].items.Count; i++)
+            {
+                if(universals[u].items[i].ToString() == item)
+                    return false; //igual
+            }
+        }
+
+        return true; //diferente
     }
 
-    private void Start() {
-        if(addAllUniv) AddAllUniversals();
-    }
+    bool VerifyIfDifferent(string item, string character, GiftType tipo){
+        for (int c = 0; c < characters.Length; c++)
+        {
+            if(characters[c].charName == character) return characters[c].VerifyIfDifferent(item, tipo);
+        }
 
+        return false;
+    }
+    
     private void AddAllUniversals() {
         
         //likes
@@ -121,36 +197,26 @@ public class Manager : MonoBehaviour
         File.WriteAllText(Application.dataPath + "/failedItems.json", json);
     }
 
-    public void AddSpecific(string todos, GiftType tipo){
-        //separa os itens
-        string[] it = todos.Split(',');
-
-        tipoStr.text = tipo.ToString();
-
-        for (int i = 0; i < it.Length; i++)
-        {
-            if(it[i] != "")
-                if(VerifyIfDifferent(it[i]))
-                    AddUniversal(it[i]);//todo fazer ele pegar o tipo certo
-        }
-    }
-
-    bool VerifyIfDifferent(string item){ //verifica se nao esta adicionando o mesmo item
-        for (int u = 0; u < universals.Length; u++)
-        {
-            for (int i = 0; i < universals[u].items.Count; i++)
-            {
-                if(universals[u].items[i].ToString() == item)
-                    return false; //igual
-            }
-        }
-
-        return true; //diferente
-    }
-
     private void Update() {
         //recarrega a cena
         if(Input.GetKeyDown(KeyCode.Space)) UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+    }
+
+    GiftType UpdateGiftType(){
+        //pega o tipo
+        GiftType tipo = GiftType.None;
+        try {
+            //success
+            tipo = ParseGiftType(activeTipoStr.text);
+        } catch {
+            print("Unable to parse type " + tipoStr);
+        }
+
+        return tipo;
+    }
+
+    string UpdateCharacter(){
+        return characterStr.text;
     }
 
     public static GiftType ParseGiftType(string s){

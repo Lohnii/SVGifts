@@ -5,13 +5,27 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "CharactersSO", menuName = "StardewValleyGiftsUnity/CharacterSO")]
 public class CharactersSO : ScriptableObject {
     public string charName;
-    public Gifts[] gifts;
+    public Gifts[] gifts = new Gifts[5];
+
+    public bool VerifyIfDifferent(string item, GiftType tipo){
+        Items it = Manager.ParseItem(item);
+        for (int g = 0; g < gifts.Length; g++)
+        {
+            if(tipo == gifts[g].giftType) { //mesmo tipo                    
+                for (int e = 0; e < gifts[g].exceptions.Count; e++){
+                    if(gifts[g].exceptions[e] == it) return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
 }
 
 [System.Serializable]
 public class Gifts {
     public GiftType giftType;
-    public UniversalOpinionsSO[] universalOpinions;
     public List<Items> exceptions;
 
     public List<Items>[] items;
