@@ -12,7 +12,9 @@ public class Manager : MonoBehaviour
 
     public InputField tipoStr;
 
-    public SerializableList<string> failos;
+    public SerializableList<string> failedStr;
+
+    public bool addAllUniv;
 
     public void AddUniversal(string itemStr){
         //pega o tipo
@@ -32,7 +34,7 @@ public class Manager : MonoBehaviour
 
         //verifica se o index eh valido
         if(u < 0 || u > universals.Length){
-            print("Could not find universal type " + u);
+            print("Could not find universal type " + u + " " + tipo.ToString());
         }
 
         try {
@@ -42,28 +44,30 @@ public class Manager : MonoBehaviour
 
         } catch {
             print("Could not parse item " + itemStr);
-            failos.list.Add(itemStr);
+            failedStr.list.Add(itemStr);
         }
     }
 
     private void Start() {
-        /*
+        if(addAllUniv) AddAllUniversals();
+    }
+
+    private void AddAllUniversals() {
+        
         //likes
         string flowers = "SweetPea,Crocus,Sunflower,Tulip,SummerSpangle,FairyRose,BlueJazz";
         AddSpecific(flowers, GiftType.Likes);
-
         string minerals = "EarthCrystal,FireQuartz,FrozenTear";
         AddSpecific(minerals, GiftType.Likes);
-
         string fruitTreeFruits = "Apple,Apricot,Cherry,Orange,Peach,Pomegranate,";
         AddSpecific(fruitTreeFruits, GiftType.Likes);
-
         string gems = "Amethyst,Aquamarine,Diamond,Emerald,Jade,Ruby,Topaz";
         AddSpecific(gems, GiftType.Likes);
-
         string vegetables = "Amaranth,Artichoke,Beet,BokChoy,Cauliflower,Corn,Eggplant,FiddleheadFern,Garlic,GreenBean,Kale,Parsnip,Potato,Pumpkin,Radish,RedCabbage,TaroRoot,Tomato,Yam";
         AddSpecific(vegetables, GiftType.Likes);
-        */
+        string likes = "LifeElixir,MapleSyrup";
+        AddSpecific(likes, GiftType.Neutral);
+
         //neutrals
         string neutrals = "Bread,Clam,Coral,DuckFeather,FriedEgg,Hops,NautilusShell,RainbowShell,Roe,SquidInk,SweetGemBerry,TeaLeaves,Truffle,Wheat,Wool";
         AddSpecific(neutrals, GiftType.Neutral);
@@ -100,10 +104,20 @@ public class Manager : MonoBehaviour
         string dislikes = "CaveCarrot,Driftwood,FieldSnack,JackOLantern,OakResin,Oil,PineTar,QiFruit,Rice,SolarEssence,SpringOnion,TeaSet,UnmilledRice,Vinegar,VoidEgg,VoidEssence,WheatFlour";
         AddSpecific(dislikes, GiftType.Dislikes);
 
+        //hates
+        string bait = "Bait,MagicBait,Magnet,WildBait,";
+        string fossils = "FossilizedLeg,FossilizedRibs,FossilizedSkull,FossilizedSpine,FossilizedTail,MummifiedFrog,MummifiedBat,SnakeSkull,SnakeVertebrae,";
+        string monsterLoot = "Slime,BugMeat,BatWing,";
+        string trash = "Trash,Coal,IronOre,Coal,SoggyNewspaper,Cloth,BrokenCD,RefinedQuartz,BrokenGlasses,RefinedQuartz,JojaCola,RottenPlant,";
+        string hates = "ArtifactTrove,BugSteak,Carp,CopperOre,CrabPot,DragonTooth,DrumBlock,EnergyTonic,ErrorItem,ExplosiveAmmo,FairyDust,FluteBlock,GrassStarter,GreenAlgae,GoldenCoconut,Hay,IronOre,JournalScrap,MonsterMusk,MuscleRemedy,OilofGarlic,Poppy,QiSeasoning,RadioactiveBar,RadioactiveOre,RainTotem,RedMushroom,Sap,SeaUrchin,SeafoamPudding,Seaweed,SecretNote,SlimeEgg,Snail,StrangeBun,Sugar,Torch,TreasureChest,VoidMayonnaise,WarpTotemBeach,WarpTotemDesert,WarpTotemFarm,WarpTotemIsland,WarpTotemMountains,WhiteAlgae,";
+        string allHates = bait + fossils + monsterLoot+ trash + hates;
+        AddSpecific(allHates, GiftType.Hates);
+
+        //save failed stuff
         if (File.Exists(Application.dataPath + "/failedItems.json")) {
             File.Delete(Application.dataPath + "/failedItems.json");
         }
-        string json = JsonUtility.ToJson(failos);
+        string json = JsonUtility.ToJson(failedStr);
         File.WriteAllText(Application.dataPath + "/failedItems.json", json);
     }
 

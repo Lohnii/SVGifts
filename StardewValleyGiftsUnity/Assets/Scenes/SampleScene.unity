@@ -403,7 +403,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1f74d4ceac9a3e143be1039ca06aeb4d, type: 2}
   - {fileID: 11400000, guid: 6161ac0945c6d564ea72387ba3efd76a, type: 2}
   - {fileID: 11400000, guid: 48e5a857b3157cb49b50ad761b587622, type: 2}
+  - {fileID: 11400000, guid: dff833e3985c5034988c55dcebcca438, type: 2}
   tipoStr: {fileID: 47145857}
+  failedStr:
+    list: []
+  addAllUniv: 0
 --- !u!1 &1799856329
 GameObject:
   m_ObjectHideFlags: 0

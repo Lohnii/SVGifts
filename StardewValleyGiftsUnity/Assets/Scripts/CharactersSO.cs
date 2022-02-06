@@ -102,4 +102,10 @@ public enum Items {
     WalleyeWoods,Woodskip,Ghostfish,Stonefish,Sandfish,ScorpionCarpBugLair,SlimejacksSwamp,VoidSalmonMarket,Blobfish,SuperCucumberPot,SnailIsland,BlueDiscus,
     CaveCarrot,Driftwood,JackOLantern,Rice,SolarEssence,TeaSet,Vinegar,VoidEssence,WheatFlour,
 
+    //hates
+    Bait,MagicBait,Magnet,WildBait,FossilizedLeg,FossilizedRibs,FossilizedSkull,FossilizedSpine,FossilizedTail,MummifiedFrog,MummifiedBat,SnakeSkull,SnakeVertebrae,
+    BugMeat,BatWing,Trash,IronOre,SoggyNewspaper,BrokenCD,BrokenGlasses,JojaCola,RottenPlant,CopperOre,CrabPot,DrumBlock,EnergyTonic,ErrorItem,ExplosiveAmmo,FairyDust,
+    FluteBlock,GrassStarter,GreenAlgae,JournalScrap,MonsterMusk,MuscleRemedy,RadioactiveBar,RadioactiveOre,RainTotem,SecretNote,Snail,Sugar,Torch,WarpTotemBeach,
+    WarpTotemDesert,WarpTotemFarm,WarpTotemIsland,WarpTotemMountains,WhiteAlgae,
+
 }
